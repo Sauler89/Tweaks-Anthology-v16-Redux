@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////                                                            \\\\\////\\\\////
+///// Opportunist class feat for Rogues                                      \\\\\
+/////                                                            \\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_opportunist.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_opportunist.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_opportunist.tra" BEGIN
+    LAF "OPPORTUNIST" END
+  END
+END

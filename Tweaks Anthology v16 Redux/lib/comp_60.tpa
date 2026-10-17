@@ -1,0 +1,52 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Weapon Animation Tweaks                          \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+PRINT @1
+COPY_EXISTING_REGEXP GLOB ~^.+\.itm$~ ~override~ // animation adjustments
+  PATCH_IF (SOURCE_SIZE > 0x71) THEN BEGIN // protects against invalid files
+    READ_BYTE  0x18 flags
+    READ_ASCII 0x22 anim (2)
+    SET overhead = 0
+    PATCH_IF (((flags & BIT1) = 0) AND                                    // one-handed...
+              (("%anim%" STRING_COMPARE_CASE "cl" = 0) OR                 // club
+               ("%anim%" STRING_COMPARE_REGEXP "[Mm][CcSs2]" = 0))) BEGIN // or mace or morningstar
+      SET overhead  = 50
+      SET backhand  = 50
+      SET thrusting =  0
+    END ELSE
+    PATCH_IF (("%anim%" STRING_COMPARE_CASE "sp" = 0) AND ((flags & BIT1) = BIT1)) BEGIN  // two-handed spears
+      SET overhead  = 10
+      SET backhand  = 10
+      SET thrusting = 80
+    END ELSE
+    PATCH_IF (("%anim%" STRING_COMPARE_CASE "ss" = 0) AND ((flags & BIT1) = 0)) BEGIN // one-handed short swords
+      SET overhead  = 10
+      SET backhand  = 20
+      SET thrusting = 70
+    END ELSE
+    PATCH_IF (((flags & BIT1) = BIT1) AND                                // two-handed...
+              (("%anim%" STRING_COMPARE_CASE "gs" = 0) OR                // glowing staff
+               ("%anim%" STRING_COMPARE_REGEXP "[Qq][Ss234]" = 0))) BEGIN // or other staff
+      SET overhead  = 20
+      SET backhand  = 10
+      SET thrusting = 70
+    END
+    PATCH_IF overhead BEGIN
+      READ_LONG  0x64 abil_off
+      READ_SHORT 0x68 abil_num
+      FOR (index = 0 ; index < abil_num ; ++index) BEGIN
+        READ_BYTE (abil_off + (index * 0x38)) type
+        PATCH_IF (type = 1) BEGIN
+          WRITE_SHORT (abil_off + 0x2c + (index * 0x38)) overhead
+          WRITE_SHORT (abil_off + 0x2e + (index * 0x38)) backhand
+          WRITE_SHORT (abil_off + 0x30 + (index * 0x38)) thrusting
+        END
+      END
+    END
+  END
+  BUT_ONLY

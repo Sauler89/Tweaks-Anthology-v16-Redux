@@ -1,0 +1,21 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Change Viconia's Skin Color to Dark Blue         \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/joinable_npc_array.tpa~
+
+ACTION_PHP_EACH JOINABLE_NPC_ARRAY AS file => dv BEGIN
+
+  ACTION_IF ("%dv%" STRING_COMPARE_CASE "viconia" = 0) BEGIN
+
+    COPY_EXISTING ~%file%~ ~override~
+      WRITE_BYTE 0x2f 96
+      BUT_ONLY
+
+  END
+
+END

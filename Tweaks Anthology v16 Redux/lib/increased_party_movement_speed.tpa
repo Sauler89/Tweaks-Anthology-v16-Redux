@@ -1,0 +1,599 @@
+// Installs increased movement speed outside of combat by the best method available for the game
+DEFINE_ACTION_FUNCTION A7_INSTALL_AUTOHASTE
+INT_VAR
+  casting_speed = 0
+  movement_speed = 1
+  speed_percent = 100
+  display_icons = 1
+RET
+  success
+BEGIN
+  OUTER_SET success = 0
+  ACTION_IF (!VARIABLE_IS_SET redux_autohaste_combat_cooldown ||
+             !IS_AN_INT redux_autohaste_combat_cooldown) BEGIN
+    OUTER_SET redux_autohaste_combat_cooldown = 1
+  END
+  ACTION_IF (redux_autohaste_combat_cooldown < 0 ||
+             redux_autohaste_combat_cooldown > 60) BEGIN
+    OUTER_SET redux_autohaste_combat_cooldown = 1
+  END
+
+  ACTION_IF (enhanced_edition && FILE_EXISTS ~engine.lua~) BEGIN
+    LAF A7_INSTALL_AUTOHASTE_SPLSTATE
+      INT_VAR casting_speed movement_speed speed_percent display_icons
+      RET success
+    END
+  END
+
+  ACTION_IF (NOT success) BEGIN
+    LAF A7_INSTALL_AUTOHASTE_SECTYPE
+      INT_VAR casting_speed movement_speed speed_percent display_icons
+      RET success
+    END
+  END
+END
+
+
+// Installs increased movement speed outside of combat via spellstate detection (compatible with: EE games 2.0+)
+DEFINE_ACTION_FUNCTION A7_INSTALL_AUTOHASTE_SPLSTATE
+INT_VAR
+  casting_speed = 0
+  movement_speed = 1
+  speed_percent = 100
+  display_icons = 1
+RET
+  success
+BEGIN
+  OUTER_SET success = 0
+
+  ACTION_IF (casting_speed || movement_speed) BEGIN
+    ACTION_IF (speed_percent <= 0) BEGIN
+      OUTER_SET speed_percent = 100
+    END
+
+    // Install auto-haste functionality
+    OUTER_SET slot_autohaste = IDS_OF_SYMBOL(~splstate~ ~A7_AUTO_SPEED~)
+    ACTION_IF (slot_autohaste < 0) BEGIN
+      OUTER_PATCH ~~ BEGIN
+        FOR (idx = 100; idx < 256; ++idx) BEGIN
+          LOOKUP_IDS_SYMBOL_OF_INT value ~splstate~ idx
+          PATCH_IF (~%value%~ STR_EQ ~%idx%~) BEGIN
+            SET slot_autohaste = idx
+            SET idx = 256
+          END
+        END
+      END
+      ACTION_IF (slot_autohaste >= 0) BEGIN
+        APPEND ~splstate.ids~ ~%slot_autohaste% A7_AUTO_SPEED~ UNLESS ~A7_AUTO_SPEED~
+        CLEAR_IDS_MAP
+      END
+    END
+
+    ACTION_IF (slot_autohaste >= 0) BEGIN
+    
+      ACTION_IF (display_icons) BEGIN
+        // installing custom portrait icon
+        COPY ~Tweaks Anthology v16 Redux/bam/a7_wlk1d.bam~ ~override~
+             ~Tweaks Anthology v16 Redux/bam/a7_wlk2d.bam~ ~override~
+
+        COPY_EXISTING ~statdesc.2da~ ~override~
+          COUNT_2DA_ROWS 3 num_rows
+          READ_2DA_ENTRY (num_rows - 1) 0 3 last_index
+          SET move_icon = IS_AN_INT ~last_index~ ? last_index + 1 : num_rows
+          SET cast_icon = move_icon + 1
+        BUT_ONLY
+
+        OUTER_SET move_strref = RESOLVE_STR_REF(@333056)
+        OUTER_SET cast_strref = RESOLVE_STR_REF(@333057)
+
+        APPEND ~statdesc.2da~ ~%move_icon% %move_strref% A7_WLK1D~
+        APPEND ~statdesc.2da~ ~%cast_icon% %cast_strref% A7_WLK2D~
+
+        COPY_EXISTING ~statdesc.2da~ ~override~
+          PRETTY_PRINT_2DA
+        BUT_ONLY
+
+        /*COPY_EXISTING ~statdesc.2da~ ~override~
+          PATCH_IF (movement_speed) BEGIN
+            SET haste_icon = 38
+            REPLACE_EVALUATE ~^\([0-9]+\)\([ %TAB%]+[0-9]+[ %TAB%]+[Bb][Oo][Oo][Tt]01[Dd]\)[ %TAB%]*~ BEGIN // if 'increased movement speed' icon exists, use it instead of haste
+              SET haste_icon = MATCH1 // grab icon
+            END ~%MATCH1%%MATCH2%~
+          END
+          PATCH_IF (casting_speed) BEGIN
+            SET imp_alac = RESOLVE_STR_REF(@333055) // bgee/sod doesn't have a label for this 'improved alacrity' icon
+            REPLACE_TEXTUALLY ~^159[ %TAB%]+-1~ ~159 %imp_alac%~
+          END
+          BUT_ONLY*/
+      END
+    
+      COPY ~Tweaks Anthology v16 Redux/spl/a7_wlk1.spl~ ~override~
+        SAY 0x08 @333054 // add generic name for when this is viewed with e^3x
+        PATCH_IF (movement_speed) BEGIN
+          LPF ADD_SPELL_EFFECT
+          INT_VAR
+            insert_point = 0  // add on top
+            opcode = 176      // Movement rate bonus 2
+            target = 2        // Preset target
+            parameter1 = speed_percent
+            parameter2 = 2    // Set % of
+            duration = 10
+          END
+          PATCH_IF (display_icons) BEGIN
+            LPF ADD_SPELL_EFFECT
+            INT_VAR
+              insert_point = 1
+              opcode = 142      // Display portrait icon
+              target = 2        // Preset target
+              parameter2 = move_icon  // Movement Speed
+              duration = 10
+            END
+          END
+        END
+
+        PATCH_IF (casting_speed) BEGIN
+          SET insert_point = 0
+          LPF ADD_SPELL_EFFECT
+          INT_VAR
+            insert_point      // add on top
+            opcode = 188      // Aura Cleansing
+            target = 2        // Preset target
+            parameter2 = 1    // Stat value
+            duration = 10
+          END
+          SET insert_point += 1
+          PATCH_IF (display_icons) BEGIN
+            LPF ADD_SPELL_EFFECT
+            INT_VAR
+              insert_point
+              opcode = 142      // Display portrait icon
+              target = 2        // Preset target
+              parameter2 = cast_icon  // Casting Speed
+              duration = 10
+            END
+            SET insert_point += 1
+          END
+          LPF ADD_SPELL_EFFECT
+          INT_VAR
+            insert_point
+            opcode = 282      // Modify script state
+            target = 2        // Preset target
+            parameter1 = 1    // Stat value
+            parameter2 = 9    // Wizard Improved Alacrity
+            duration = 10
+          END
+        END
+
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          insert_point = 0  // add on top
+          opcode = 328      // Set spell state
+          target = 2        // Preset target
+          parameter2 = slot_autohaste
+          timing = 0
+          duration = 10
+          special = 1       // use spell states from table
+        END
+
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          insert_point = 0  // add on top
+          opcode = 321      // Remove effects by resource
+          target = 2        // Preset target
+          timing = 1
+        STR_VAR
+          resource = ~A7_WLK1~
+        END
+
+      COPY ~Tweaks Anthology v16 Redux/spl/a7_wlk2.spl~ ~override~
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          opcode = 321      // Remove effects by resource
+          target = 2        // Preset target
+          timing = 1
+        STR_VAR
+          resource = ~A7_WLK1~
+        END
+
+      // Apply to selected familiar-type followers
+      LAF __A7_GET_FOLLOWER_LIST
+        INT_VAR include_familiars = 0
+        RET_ARRAY cre_defs
+      END
+
+      ACTION_PHP_EACH cre_defs AS resref => name BEGIN
+        ACTION_IF (FILE_EXISTS_IN_GAME ~%resref%.cre~) BEGIN
+          COPY ~Tweaks Anthology v16 Redux/baf/a7#haste_splstate_special.baf~ ~Tweaks Anthology v16 Redux/baf/a7#haste_splstate_special.baf~
+            READ_ASCII 0 script (BUFFER_LENGTH)
+          BUT_ONLY
+          OUTER_TEXT_SPRINT suffix ~%resref%~
+          LAF A7_ADD_GLOBAL_SCRIPT
+            INT_VAR extend_top = 1
+            STR_VAR script
+          END
+        END
+      END
+
+      // Apply to party members and familiar
+      OUTER_FOR (i = 7; i >= 1; --i) BEGIN
+        ACTION_IF (i = 7) BEGIN
+          OUTER_TEXT_SPRINT suffix ~F~
+          OUTER_TEXT_SPRINT player ~Familiar~
+        END ELSE BEGIN
+          OUTER_TEXT_SPRINT suffix ~P%i%~
+          OUTER_TEXT_SPRINT player ~Player%i%~
+        END
+        COPY ~Tweaks Anthology v16 Redux/baf/a7#haste_splstate.baf~ ~Tweaks Anthology v16 Redux/baf/a7#haste_splstate.baf~
+          READ_ASCII 0 script (BUFFER_LENGTH)
+        BUT_ONLY
+        LAF A7_ADD_GLOBAL_SCRIPT
+          INT_VAR extend_top = 1
+          STR_VAR script
+        END
+      END
+
+      // Give Player1 ability to control auto-haste via innate ability
+      LAM __A7_INSTALL_ABILITY
+
+      OUTER_SET success = 1
+    END
+  END
+END
+
+
+// Installs increased movement speed outside of combat via secondary type removal (compatible with: EE games, classic games + TobEx)
+DEFINE_ACTION_FUNCTION A7_INSTALL_AUTOHASTE_SECTYPE
+INT_VAR
+  casting_speed = 0
+  movement_speed = 1
+  speed_percent = 100
+  display_icons = 1
+RET
+  success
+BEGIN
+  OUTER_SET success = 0
+
+  ACTION_IF (casting_speed || movement_speed) BEGIN
+    ACTION_IF (speed_percent <= 0) BEGIN
+      OUTER_SET speed_percent = 100
+    END
+
+    // Install auto-haste functionality
+    OUTER_SET slot_autohaste = "-1"
+    COPY_EXISTING ~msectype.2da~ ~override~
+      COUNT_2DA_ROWS 1 numRows
+      SET slot_autohaste = numRows - 3  // exclude 2DA header rows
+    BUT_ONLY IF_EXISTS
+
+    ACTION_IF (slot_autohaste >= 0 && slot_autohaste <= 255) BEGIN
+        OUTER_SET strref_speed_off = (enhanced_edition) ? "-1" : RESOLVE_STR_REF(@333070) // Movement speed bonus removed
+      APPEND ~msectype.2da~ ~A7_AUTOHASTE     %strref_speed_off%~
+
+      OUTER_FOR (idx = 1; idx <= 2; ++idx) BEGIN
+        CREATE ~eff~ ~a7_wlk%idx%~
+          WRITE_LONG 0x10 187 // opcode
+          WRITE_LONG 0x14 1   // target
+          WRITE_LONG 0x1c (2 - idx) // parameter1
+          WRITE_LONG 0x24 9   // timing
+          WRITE_LONG 0x2c 100 // probability1
+          WRITE_ASCII 0xa8 ~A7_AutoHasteActive~ (32)  // variable name
+      END
+
+      COPY ~Tweaks Anthology v16 Redux/spl/a7_wlk1a.spl~ ~override~
+        WRITE_BYTE 0x27 slot_autohaste
+
+      COPY ~Tweaks Anthology v16 Redux/spl/a7_wlk1.spl~ ~override~
+        WRITE_BYTE 0x27 slot_autohaste
+        PATCH_IF (movement_speed) BEGIN
+          LPF ADD_SPELL_EFFECT
+          INT_VAR
+            insert_point = 0  // add on top
+            opcode = 176      // Movement rate bonus 2
+            target = 2        // Preset target
+            parameter1 = speed_percent
+            parameter2 = 2    // Set % of
+            duration = 10
+          END
+          PATCH_IF (display_icons) BEGIN
+            LPF ADD_SPELL_EFFECT
+            INT_VAR
+              insert_point = 1
+              opcode = 142      // Display portrait icon
+              target = 2        // Preset target
+              parameter2 = 38   // Haste
+              duration = 10
+            END
+          END
+        END
+
+        PATCH_IF (casting_speed) BEGIN
+          LPF ADD_SPELL_EFFECT
+          INT_VAR
+            insert_point = 0  // add on top
+            opcode = 188      // Aura Cleansing
+            target = 2        // Preset target
+            parameter2 = 1    // Stat value
+            duration = 10
+          END
+          PATCH_IF (display_icons) BEGIN
+            LPF ADD_SPELL_EFFECT
+            INT_VAR
+              insert_point = 1
+              opcode = 142      // Display portrait icon
+              target = 2        // Preset target
+              parameter2 = 159  // Improved Alacrity
+              duration = 10
+            END
+          END
+        END
+
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          insert_point = 0  // add on top
+          opcode = 177      // Use EFF file
+          target = 2        // Preset target
+          parameter2 = 2    // target=EA/ANYONE
+          timing = 1
+        STR_VAR
+          resource = ~A7_WLK1~
+        END
+
+      COPY ~Tweaks Anthology v16 Redux/spl/a7_wlk2.spl~ ~override~
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          opcode = 177      // Use EFF file
+          target = 2        // Preset target
+          parameter2 = 2    // target=EA/ANYONE
+          timing = 1
+        STR_VAR
+          resource = ~A7_WLK2~
+        END
+        LPF ADD_SPELL_EFFECT
+        INT_VAR
+          opcode = 221      // Remove spell type protections
+          target = 2        // Preset target
+          parameter1 = 10   // maximum level
+          parameter2 = slot_autohaste // secondary type
+          timing = 1
+        END
+
+      // Apply to familiars and selected familiar-type followers
+      LAF __A7_GET_FOLLOWER_LIST
+        INT_VAR include_familiars = 1
+        RET_ARRAY cre_defs
+      END
+
+      ACTION_PHP_EACH cre_defs AS resref => name BEGIN
+        ACTION_IF (FILE_EXISTS_IN_GAME ~%resref%.cre~) BEGIN
+          COPY ~Tweaks Anthology v16 Redux/baf/a7#haste_sectype_special.baf~ ~Tweaks Anthology v16 Redux/baf/a7#haste_sectype_special.baf~
+            READ_ASCII 0 script (BUFFER_LENGTH)
+          BUT_ONLY
+          OUTER_TEXT_SPRINT suffix ~%resref%~
+          LAF A7_ADD_GLOBAL_SCRIPT
+            INT_VAR extend_top = 1
+            STR_VAR script
+          END
+        END
+      END
+
+      // Apply to party members
+      OUTER_FOR (i = 6; i >= 1; --i) BEGIN
+        OUTER_TEXT_SPRINT suffix ~P%i%~
+        OUTER_TEXT_SPRINT player ~Player%i%~
+        COPY ~Tweaks Anthology v16 Redux/baf/a7#haste_sectype.baf~ ~Tweaks Anthology v16 Redux/baf/a7#haste_sectype.baf~
+          READ_ASCII 0 script (BUFFER_LENGTH)
+        BUT_ONLY
+        LAF A7_ADD_GLOBAL_SCRIPT
+          INT_VAR extend_top = 1
+          STR_VAR script
+        END
+      END
+
+      // Give Player1 ability to control auto-haste via innate ability
+      LAM __A7_INSTALL_ABILITY
+
+      OUTER_SET success = 1
+    END
+  END
+END
+
+
+// Adds a script on top or at the bottom of all available global scripts (i.e. baldur.bcs, etc.)
+DEFINE_ACTION_FUNCTION A7_ADD_GLOBAL_SCRIPT
+INT_VAR
+  extend_top = 1    // 0: EXTEND_BOTTOM, 1: EXTEND_TOP
+STR_VAR
+  script_file = ~~  // filename of the script to add (leave empty to skip)
+  script = ~~       // Script content to add (leave empty to skip)
+BEGIN
+  ACTION_CLEAR_ARRAY ~script_files~
+
+  // hardcoded script files
+  OUTER_SET $script_files(~BALDUR~) = 1
+  OUTER_SET $script_files(~BALDUR25~) = 1
+
+  // externalized script files
+  COPY_EXISTING ~campaign.2da~ ~override~
+    COUNT_2DA_ROWS 32 numRows
+    FOR (row = 0; row < numRows; ++row) BEGIN
+      READ_2DA_ENTRY row 1 32 resref
+      TO_UPPER ~resref~
+      SET $script_files(~%resref%~) = 1
+    END
+  BUT_ONLY IF_EXISTS
+
+  // append script to files
+  ACTION_PHP_EACH script_files AS resref => value BEGIN
+    ACTION_IF (IS_AN_INT ~value~ && value != 0) BEGIN
+      OUTER_TEXT_SPRINT source_file ~%resref%.bcs~
+      LAM __A7_EXTEND_SCRIPT
+    END
+  END
+END
+
+
+// Used internally. Variables: extend_top, source_file, script_file, script
+DEFINE_ACTION_MACRO __A7_EXTEND_SCRIPT
+BEGIN
+  LOCAL_SET strlen = STRING_LENGTH ~%script%~
+
+  ACTION_IF (FILE_EXISTS_IN_GAME ~%source_file%~) BEGIN
+    // adding script file
+    ACTION_IF (FILE_EXISTS ~%script_file%~) BEGIN
+      ACTION_IF (extend_top) BEGIN
+        EXTEND_TOP ~%source_file%~ ~%script_file%~ EVAL
+      END ELSE BEGIN
+        EXTEND_BOTTOM ~%source_file%~ ~%script_file%~ EVAL
+      END
+    END
+
+    // adding script content
+    ACTION_IF (strlen > 0) BEGIN
+      COPY_EXISTING ~%source_file%~ ~override~
+        DECOMPILE_AND_PATCH BEGIN
+          SET ofs = extend_top ? 0 : BUFFER_LENGTH
+          INSERT_BYTES ofs strlen
+          WRITE_ASCIIE ofs ~%script%~ (strlen)
+        END
+      BUT_ONLY IF_EXISTS
+    END
+  END
+END
+
+
+// Used internally. Give Player1 ability to control auto-haste via innate ability
+DEFINE_ACTION_MACRO __A7_INSTALL_ABILITY
+BEGIN
+  COPY ~Tweaks Anthology v16 Redux/spl/a7_hst1.spl~ ~override~
+    SAY NAME1 @333050 // Disable auto-haste
+    PATCH_IF (movement_speed && casting_speed) BEGIN
+      SAY UNIDENTIFIED_DESC @333052 // ...
+    END ELSE PATCH_IF (NOT movement_speed && casting_speed) BEGIN
+      SAY UNIDENTIFIED_DESC @333053 // ...
+    END ELSE BEGIN
+      SAY UNIDENTIFIED_DESC @333051 // ...
+    END
+
+  COPY ~Tweaks Anthology v16 Redux/spl/a7_hst2.spl~ ~override~
+    SAY NAME1 @333060 // Enable auto-haste
+    PATCH_IF (movement_speed && casting_speed) BEGIN
+      SAY UNIDENTIFIED_DESC @333062 // ...
+    END ELSE PATCH_IF (NOT movement_speed && casting_speed) BEGIN
+      SAY UNIDENTIFIED_DESC @333063 // ...
+    END ELSE BEGIN
+      SAY UNIDENTIFIED_DESC @333061 // ...
+    END
+
+  OUTER_FOR (idx = 1; idx <= 2; ++idx) BEGIN
+    CREATE ~eff~ ~a7_hst%idx%~
+      WRITE_LONG 0x10 265 // opcode
+      WRITE_LONG 0x14 1   // target
+      WRITE_LONG 0x1c (idx - 1) // parameter1
+      WRITE_LONG 0x24 9   // timing
+      WRITE_LONG 0x2c 100 // probability1
+      WRITE_ASCII 0x30 ~A7_AutoH~ (8) // variable name (part 1)
+      WRITE_ASCII 0x70 ~asteActi~ (8) // variable name (part 2)
+      WRITE_ASCII 0x78 ~ve~ (8)       // variable name (part 3)
+  END
+
+  COPY ~Tweaks Anthology v16 Redux/bam/a7_hst1b.bam~ ~override~
+       ~Tweaks Anthology v16 Redux/bam/a7_hst2b.bam~ ~override~
+
+  LAF A7_ADD_GLOBAL_SCRIPT
+    INT_VAR extend_top = 1
+    STR_VAR script_file = ~Tweaks Anthology v16 Redux/baf/a7#haste_ability.baf~
+  END
+END
+
+
+// Used internally. Returns a list of resref/script_name pairs for potential follower-type creatures.
+DEFINE_ACTION_FUNCTION __A7_GET_FOLLOWER_LIST
+INT_VAR
+  include_familiars = 0 // whether to include regular familiars in the list
+RET_ARRAY
+  cre_defs              // array consisting of cre resref => script name associations
+BEGIN
+  ACTION_CLEAR_ARRAY ~cre_defs~
+
+  ACTION_IF (include_familiars) BEGIN
+    // needed for original games and EE games before patch 2.0
+    ACTION_DEFINE_ASSOCIATIVE_ARRAY cre_defs BEGIN
+      ~famcat~   => ~famcat~
+      ~famdust~  => ~famdust~
+      ~famfair~  => ~famfair~
+      ~famfer~   => ~famfer~
+      ~famimp~   => ~famimp~
+      ~fampsd~   => ~fampsd~
+      ~famquas~  => ~famquas~
+      ~famrab~   => ~famrab~
+    END
+  END
+
+  // Apply to familiars and selected familiar-type followers
+  ACTION_DEFINE_ASSOCIATIVE_ARRAY cre_defs BEGIN
+    // CRE resref => CRE script name
+    ~_!barb01~ => ~_!BARB01~      // Barbarian Companion: Overpowered Edition
+    ~_!sbz1~   => ~_!SBZ1~        // Sub-Zero Companion
+    ~a7afaaq~  => ~a7afaaq~       // Djinni Companion
+    ~c#bran01~ => ~c#brandock~    // Brandock the Mage NPC
+    ~c#bran03~ => ~c#brandock~    // Brandock the Mage NPC
+    ~c#grey02~ => ~c#grey~        // Grey the Dog
+    ~c#grey03~ => ~c#grey~        // Grey the Dog (SoD resource)
+    ~c#husam1~ => ~C#Husam1~      // Husam_NPC
+    ~c#sola12~ => ~c#solaufein~   // Solaufein's Rescue
+    ~clfwlf~   => ~clfwlf~        // Every Mods and Dogs
+    ~haiass1~  => ~HAIASS~        // Haiass the Wolf
+    ~korax~    => ~Korax~         // Korax the Ghoul NPC
+    ~metbae~   => ~BAENWULD~      // The Tortured Soul Quest
+    ~nq#cop1~  => ~NQ#COP1~       // Genwas Tierbegleiter
+    ~nq#gre1~  => ~NQ#GRE1~       // Genwas Tierbegleiter
+    ~nq#shuk~  => ~NQ#SHUK~       // Goblinmod Shuk
+    ~pxjjazon~ => ~PXJJAZON~      // Jazon the revenant
+    ~pxkribin~ => ~PXKRIBIN~      // Kri'binn the semi-mechanical spider
+    ~pxkrotan~ => ~PXKROBAN~      // Kri'binn the semi-mechanical spider
+    ~pxl2gdco~ => ~pxl2gdco~
+    ~pxl2clem~ => ~pxl2clem~
+    ~pxl2aors~ => ~pxl2aors~
+    ~rjfay1~   => ~RJFAY1~        // Jini NPNPC MOD
+    ~sharo~    => ~sharo~         // Azure NPC
+    ~z_moddy~  => ~Z_MODDY~       // Moddy the vixen
+    ~zarix~    => ~zarix~         // Worgas the NPC
+  END
+
+  // Include additions from NPC Generator
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    COUNT_2DA_ROWS 1 num_rows
+    READ_2DA_ENTRIES_NOW npc_table 1
+    FOR (row = 3; row < num_rows; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER npc_table row 1 resref
+      TO_LOWER ~resref~
+      READ_2DA_ENTRY_FORMER npc_table row 2 script_var
+      TO_LOWER ~script_var~
+      TEXT_SPRINT $cre_defs(~%resref%~) ~%script_var%~
+    END
+  BUT_ONLY IF_EXISTS
+
+  // Some mods ship several CREs for one follower or change its script name.
+  // Install one controller per actual DV, including SoD-only Grey installs.
+  ACTION_CLEAR_ARRAY redux_follower_seen
+  ACTION_CLEAR_ARRAY redux_followers
+  ACTION_PHP_EACH cre_defs AS resref => name BEGIN
+    ACTION_IF FILE_EXISTS_IN_GAME ~%resref%.cre~ BEGIN
+      COPY_EXISTING - ~%resref%.cre~ ~override~
+        READ_ASCII 0x280 redux_follower_dv (32) NULL
+      PATCH_IF (STRING_LENGTH ~%redux_follower_dv%~ > 0 &&
+                !~%redux_follower_dv%~ STRING_EQUAL_CASE ~none~) BEGIN
+        SPRINT name ~%redux_follower_dv%~
+      END
+      ACTION_TO_LOWER name
+      ACTION_IF !VARIABLE_IS_SET $redux_follower_seen(~%name%~) BEGIN
+        OUTER_SET $redux_follower_seen(~%name%~) = 1
+        OUTER_TEXT_SPRINT $redux_followers(~%resref%~) ~%name%~
+      END
+    END
+  END
+  ACTION_CLEAR_ARRAY cre_defs
+  ACTION_PHP_EACH redux_followers AS resref => name BEGIN
+    OUTER_TEXT_SPRINT $cre_defs(~%resref%~) ~%name%~
+  END
+END

@@ -1,0 +1,35 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// death cam                                        \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+LAF HANDLE_AUDIO STR_VAR audio_path = ~Tweaks Anthology v16 Redux/wav/deathcam~ oggdec_path = ~Tweaks Anthology v16 Redux/wav~ END
+
+COPY_EXISTING_REGEXP GLOB ~^.+\.are$~ ~override~
+  WRITE_LONG 0x14 (THIS | BIT4) // add player1-can-die bit
+  BUT_ONLY
+
+ACTION_FOR_EACH script IN baldur baldur25 bdbaldur BEGIN
+
+  ACTION_IF FILE_EXISTS_IN_GAME ~%script%.bcs~ THEN BEGIN
+
+    EXTEND_TOP ~%script%.bcs~ ~Tweaks Anthology v16 Redux/baf/deathcam.baf~
+
+  END
+
+END
+
+// for cutscenes which kill the player, need to end the cutscenes for game over
+ACTION_IF game_includes_sod BEGIN 
+
+  COPY_EXISTING ~bd3000.bcs~   ~override~
+                ~bdboarb2.bcs~ ~override~
+    DECOMPILE_AND_PATCH BEGIN 
+      REPLACE_TEXTUALLY ~Kill(Player6)~ ~\0 EndCutSceneMode()~
+    END
+    BUT_ONLY
+    
+END

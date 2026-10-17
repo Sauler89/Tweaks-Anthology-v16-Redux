@@ -1,0 +1,212 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Everyone Gets Bonus APR from Specialization                \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/remove_lines.tpa~
+INCLUDE ~Tweaks Anthology v16 Redux/lib/clab_reindex.tpa~
+
+COPY ~Tweaks Anthology v16 Redux/spl/d5_numat.spl~ ~override/d5_numat.spl~
+     ~Tweaks Anthology v16 Redux/spl/d5_numat.spl~ ~override/d5_numa2.spl~
+  LPF ALTER_EFFECT INT_VAR match_opcode = 321 STR_VAR resource = EVAL ~%DEST_RES%~ END
+
+// sets GETS_PROF_APR to 1 for all classes/kits
+COPY_EXISTING ~clswpbon.2da~ ~override~
+  COUNT_2DA_ROWS 4 rows
+  FOR (index = 0 ; index < rows ; ++index) BEGIN
+    READ_2DA_ENTRY index 1 4 apr
+    PATCH_IF apr BEGIN // if already set to 1, log so we can add APR bumps to CLAB table
+      READ_2DA_ENTRY index 0 4 kitname
+      TO_UPPER kitname
+      SET $cd_apr_kits("%kitname%") = 1
+    END ELSE BEGIN // set to 1 if 0
+      SET_2DA_ENTRY index 1 4 1
+    END   
+  END
+  PRETTY_PRINT_2DA
+  BUT_ONLY
+
+// if this changes for any reason, mirror the changes in comp_2210, comp_2211, and comp_2440
+COPY_EXISTING ~wspatck.2da~ ~override~
+  COUNT_2DA_COLS col_num
+  READ_2DA_ENTRY 0 1 col_num row0 // read in level 1 bonuses
+  READ_2DA_ENTRY 1 1 col_num row1
+  READ_2DA_ENTRY 2 1 col_num row2
+  READ_2DA_ENTRY 3 1 col_num row3
+  READ_2DA_ENTRY 4 1 col_num row4
+  READ_2DA_ENTRY 5 1 col_num row5
+  FOR (index = 2 ; index < col_num ; ++index) BEGIN // write level 1 bonuses to all other levels (no apr from levelling)
+    SET_2DA_ENTRY 0 index col_num row0
+    SET_2DA_ENTRY 1 index col_num row1
+    SET_2DA_ENTRY 2 index col_num row2
+    SET_2DA_ENTRY 3 index col_num row3
+    SET_2DA_ENTRY 4 index col_num row4
+    SET_2DA_ENTRY 5 index col_num row5
+  END
+  PRETTY_PRINT_2DA
+  BUT_ONLY
+
+// update prof strings in game
+ACTION_CLEAR_ARRAY cd_prof_strings
+ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN
+  dots0 => 9588  // default iwdee/bg2ee/bgee prof string
+  dots2 => 32117 // default iwdee/bg2ee specialization string
+  dots3 => 32118 // default iwdee/bg2ee mastery string
+  dots4 => 32119 // default iwdee/bg2ee high mastery string
+  dots5 => 32120 // default iwdee/bg2ee grandmastery string
+END
+
+ACTION_IF NOT (game_is_iwdee OR game_is_bg2ee OR game_is_eet) BEGIN // override dots2-5 for bgee, sod
+
+  ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN
+    dots2 => 24220 // default iwdee/bg2ee specialization string
+    dots3 => 24221 // default iwdee/bg2ee mastery string
+    dots4 => 24222 // default iwdee/bg2ee high mastery string
+    dots5 => 24223 // default iwdee/bg2ee grandmastery string
+  END
+
+END
+
+ACTION_IF FILE_EXISTS_IN_GAME ~enginest.2da~ BEGIN // if ee v2 and above, override above with actual lookups
+
+  COPY_EXISTING ~enginest.2da~ ~override~
+    REPLACE_EVALUATE ~^\(STRREF_GUI_HELP_PROFICIENCIES[ TAB%]+\)\([0-9]+\)~ BEGIN DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN dots0 => "%MATCH2%" END END ~%MATCH1%%MATCH2%~
+    REPLACE_EVALUATE ~^\(STRREF_GUI_MIXED_DOTS2[ TAB%]+\)\([0-9]+\)~        BEGIN DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN dots2 => "%MATCH2%" END END ~%MATCH1%%MATCH2%~
+    REPLACE_EVALUATE ~^\(STRREF_GUI_MIXED_DOTS3[ TAB%]+\)\([0-9]+\)~        BEGIN DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN dots3 => "%MATCH2%" END END ~%MATCH1%%MATCH2%~
+    REPLACE_EVALUATE ~^\(STRREF_GUI_MIXED_DOTS4[ TAB%]+\)\([0-9]+\)~        BEGIN DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN dots4 => "%MATCH2%" END END ~%MATCH1%%MATCH2%~
+    REPLACE_EVALUATE ~^\(STRREF_GUI_MIXED_DOTS5[ TAB%]+\)\([0-9]+\)~        BEGIN DEFINE_ASSOCIATIVE_ARRAY cd_prof_strings BEGIN dots5 => "%MATCH2%" END END ~%MATCH1%%MATCH2%~
+    BUT_ONLY
+
+END
+
+OUTER_SPRINT forbidden1 @244001
+OUTER_SPRINT forbidden2 @244002
+OUTER_SPRINT forbidden3 @244003
+
+ACTION_PHP_EACH cd_prof_strings AS prof => strref BEGIN
+
+  ACTION_GET_STRREF strref raw
+  OUTER_INNER_PATCH_SAVE string ~%raw%~ BEGIN
+    REPLACE_TEXTUALLY ~%forbidden1%~ ~~
+    REPLACE_TEXTUALLY ~%forbidden2%[ %TAB%]+\*~ ~%forbidden2%~
+    REPLACE_TEXTUALLY ~[ %TAB%]+%forbidden3%[ %TAB%]+~ ~ ~
+  END
+  STRING_SET_EVALUATE strref ~%string%~
+
+END
+
+ACTION_CLEAR_ARRAY mod_kit_clabs
+
+// add class CLABs - realistically only expect fighter/ranger/paladin/monk here, but check all for compat
+// should also do this as an array process, but lazy
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(MAGE) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabma01) ~MAGE~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(FIGHTER) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabfi01) ~FIGHTER~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(CLERIC) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabpr01) ~CLERIC~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(THIEF) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabth01) ~THIEF~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(BARD) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabba01) ~BARD~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(PALADIN) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabpa01) ~PALADIN~
+  OUTER_SPRINT $mod_kit_clabs(clabpa05) ~FALLEN_PALADIN~
+END    
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(DRUID) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabdr01) ~DRUID~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(RANGER) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabrn01) ~RANGER~
+  OUTER_SPRINT $mod_kit_clabs(clabrn05) ~FALLEN_RANGER~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(SORCERER) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabso01) ~SORCERER~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(MONK) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabmo01) ~MONK~
+END   
+ACTION_IF VARIABLE_IS_SET $cd_apr_kits(SHAMAN) BEGIN 
+  OUTER_SPRINT $mod_kit_clabs(clabsh01) ~SHAMAN~
+END   
+
+COPY_EXISTING ~kitlist.2da~ ~override~
+  COUNT_2DA_ROWS ~10~ "rows"
+  FOR ( index = 1 ; index < rows ; index = index + 1 ) BEGIN
+    READ_2DA_ENTRY %index% 1 10 kitname
+    TO_UPPER kitname
+    //PATCH_IF ((modclass = 2) OR (modclass = 6) OR (modclass = 12) OR (modclass = 20)) BEGIN
+    PATCH_IF VARIABLE_IS_SET $cd_apr_kits("%kitname%") BEGIN 
+      READ_2DA_ENTRY %index% 5 10 modclab
+      SPRINT $mod_kit_clabs(~%modclab%~) ~%kitname%~
+    END
+  END
+BUT_ONLY
+
+ACTION_PHP_EACH mod_kit_clabs AS clab => clas BEGIN
+  ACTION_IF FILE_EXISTS_IN_GAME ~%clab%.2da~ THEN BEGIN
+    APPEND ~%clab%.2da~ ~ABILITY     ****        ****        ****        ****        ****        ****        AP_D5_NUMAT ****        ****        ****        ****        ****        AP_D5_NUMA2 D5REPLACE ~ UNLESS ~AP_D5_NUMAT~
+    COPY_EXISTING ~%clab%.2da~ ~override~
+      COUNT_2DA_COLS cols
+      FOR (index = 15 ; index < cols ; ++index) BEGIN
+        REPLACE_TEXTUALLY ~D5REPLACE~ ~**** D5REPLACE~
+      END
+      REPLACE_TEXTUALLY ~D5REPLACE~ ~****~
+      LPM ~reindex_clab~
+      PRETTY_PRINT_2DA
+    BUT_ONLY
+  END
+END
+
+// for non-joinable NPCs, add back the APR they miss from these changes
+INCLUDE ~Tweaks Anthology v16 Redux/lib/joinable_npc_array.tpa~
+
+ACTION_PHP_EACH JOINABLE_NPC_ARRAY AS file => dv BEGIN
+
+  ACTION_IF IS_AN_INT dv BEGIN // non-joinable NPC
+
+    COPY_EXISTING ~%file%~ ~override~
+      READ_BYTE 0x273 class
+      PATCH_IF ((class = 2) OR ((class >= 6) AND (class <= 10)) OR (class = 12) OR ((class >= 16) AND (class <= 18)) OR (class = 20)) BEGIN
+        PATCH_IF (class = 18) BEGIN // cleric rangers have warrior levels in the second field, otherwise everyone else is in the first level field
+          READ_BYTE 0x235 level
+        END ELSE BEGIN
+          READ_BYTE 0x234 level
+        END
+        PATCH_IF level > 6 BEGIN // don't bother unless we have levels high enough to warrant changes
+          READ_BYTE 0x53 apr
+          // check we're in the allowed range first
+          PATCH_IF (apr < 0) BEGIN // illegal values
+            SET apr = 0 // set to 0
+          END ELSE
+          PATCH_IF (apr > 10) BEGIN // illegal values
+            SET apr = 5 // set to max 5 APR
+          END
+          PATCH_IF level > 12 BEGIN // +1 APR
+            SET apr = apr + 1
+            PATCH_IF ((apr > 10) OR (apr = 6)) BEGIN SET apr = 5 END // 5 = 5 APR and 10 = 9/2, so if we end up at 6 or 11 we should be at max 5 APR
+          END ELSE
+          PATCH_IF level > 6 BEGIN // +1/2 APR
+            PATCH_IF (apr < 5) BEGIN // 1-4 APR (leave 5 alone as it's maxed)
+              SET apr = apr + 6
+            END ELSE
+            PATCH_IF (apr > 5) BEGIN // 1/2 through 9/2
+              SET apr = apr - 5
+            END
+          END
+          WRITE_BYTE 0x53 apr
+        END // level check
+      END // class check
+      BUT_ONLY
+
+  END
+
+END

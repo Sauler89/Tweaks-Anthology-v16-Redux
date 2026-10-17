@@ -1,0 +1,19 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Alter Multiclass Restrictions                              \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                            \\\\\
+///// Allow non-humans selected multi-class combos               \\\\\
+/////                                                            \\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/multiclass_enable.tpa~
+LAF cd_enable_multiclass
+  INT_VAR
+    enable_humans = 0
+    enable_non_humans = 1
+    restrict_single = 1
+END

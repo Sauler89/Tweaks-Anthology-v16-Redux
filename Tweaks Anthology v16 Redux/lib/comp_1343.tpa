@@ -1,0 +1,14 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// individual Stronghold allowances                 \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// thieves guild                                    \\\\\
+/////                                                  \\\\\
+
+COMPILE ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~      // removes stronghold var
+        ~Tweaks Anthology v16 Redux/dlg/stronghold_guild.d~ // removes class check

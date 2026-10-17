@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Sneak Attack kit feat for Blackguards                           \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_sneakatt_blackguard.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_sneakatt_blackguard.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_sneakatt_blackguard.tra" BEGIN
+    LAF "SNEAKATT_BLACKGUARD" END
+  END
+END

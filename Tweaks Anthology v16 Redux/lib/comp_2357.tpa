@@ -1,0 +1,21 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Alter Multiclass Restrictions                              \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                            \\\\\
+///// multiclass madness                                         \\\\\
+/////                                                            \\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/multiclass_enable.tpa~
+LAF cd_enable_multiclass
+  INT_VAR
+    enable_humans = 1
+    enable_non_humans = 1
+    restrict_single = 0
+END
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/multiclass_text.tpa~

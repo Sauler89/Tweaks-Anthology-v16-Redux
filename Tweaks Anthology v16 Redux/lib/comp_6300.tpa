@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////                                                            \\\\\////\\\\////
+///// Smite Evil / Good Class Feat for Paladins / Blackguards                \\\\\
+/////                                                            \\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_nwn_smite_evil_good.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_nwn_smite_evil_good.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_nwn_smite_evil_good.tra" BEGIN
+    LAF "NWN_SMITE_EVIL_GOOD" END
+  END
+END

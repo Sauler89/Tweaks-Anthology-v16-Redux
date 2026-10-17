@@ -1,0 +1,15 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// individual Stronghold allowances                 \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// playhouse (bard)                                 \\\\\
+/////                                                  \\\\\
+
+COMPILE EVALUATE_BUFFER ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~                 // removes stronghold var
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_playhouse.d~        // removes class check
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_playhouse_choice.d~ // adds option to decline stronghold

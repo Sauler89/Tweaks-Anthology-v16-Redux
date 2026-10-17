@@ -1,0 +1,28 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Avatar Morphing Script                           \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COMPILE ~Tweaks Anthology v16 Redux/baf/ikmorph.baf~
+        ~Tweaks Anthology v16 Redux/dlg/ikmorph.d~
+        
+COPY ~Tweaks Anthology v16 Redux/baf/0ikmorph.baf~ ~scripts/0ikmorph.bs~
+  // if monk animation has been swapped to cleric, allow them to use the morphing script
+  PATCH_IF (((MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2560~) AND (!MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~10~)) OR // monks allowed helmets but helmets not removed
+            (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2561~) OR (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2562~)) BEGIN // monks allwoed staves
+    APPEND_FILE ~Tweaks Anthology v16 Redux/baf/0ikmorph_monk.baf~
+  END
+  COMPILE_BAF_TO_BCS
+
+APPEND ~scrpdesc.2da~ ~0IKMorph IKMorph1 IKMorph2~
+
+COPY_EXISTING ~scrpdesc.2da~ ~override~
+  REPLACE ~IKMorph1~ @5001
+  REPLACE ~IKMorph2~ @5002
+
+COPY ~Tweaks Anthology v16 Redux/cre/ikmorph.cre~  ~override~
+     ~Tweaks Anthology v16 Redux/eff/ikmorph.eff~  ~override~
+     ~Tweaks Anthology v16 Redux/spl/ikmorph.spl~  ~override~

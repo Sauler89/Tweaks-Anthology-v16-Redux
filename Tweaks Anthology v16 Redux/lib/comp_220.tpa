@@ -1,0 +1,11 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Enhanced Overlays for Colorblind Players                   \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COPY ~Tweaks Anthology v16 Redux/bam/stortint.bam~ ~override~ // red, unusable
+     ~Tweaks Anthology v16 Redux/bam/stortin2.bam~ ~override~ // blue, needs ID
+     ~Tweaks Anthology v16 Redux/bam/stortin3.bam~ ~override~ // green, learnable scroll

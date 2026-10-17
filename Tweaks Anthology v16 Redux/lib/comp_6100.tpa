@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Cleave feat for Fighters                                        \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_cleave.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_cleave.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_cleave.tra" BEGIN
+    LAF "CLEAVE" END
+  END
+END

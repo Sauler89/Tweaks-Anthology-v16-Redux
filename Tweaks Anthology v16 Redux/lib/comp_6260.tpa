@@ -1,0 +1,15 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Uncanny Dodge class feat for Barbarians and Rogues              \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_uncanny_dodge.tph"
+  //
+  LAF "UNCANNY_DODGE" END
+END

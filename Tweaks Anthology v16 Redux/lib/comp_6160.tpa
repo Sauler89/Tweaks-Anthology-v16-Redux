@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+/////  NWN-ish Barbarian Rage                                         \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_nwn_barbarian_rage.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_nwn_barbarian_rage.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_nwn_barbarian_rage.tra" BEGIN
+    LAF "NWN_BARBARIAN_RAGE" END
+  END
+END

@@ -1,0 +1,28 @@
+IF
+  Global("cdt_spawn_tiax","GLOBAL",0)
+  LevelLT(Player1,4)
+THEN
+  RESPONSE #100
+    SetGlobal("cdt_spawn_tiax","GLOBAL",1)
+    CreateCreature("TIAX",[%x_coord%.%y_coord%],%orient%) // Tiax
+END
+
+IF
+  Global("cdt_spawn_tiax","GLOBAL",0)
+  OR(2)
+    Level(Player1,4)
+    Level(Player1,5)
+THEN
+  RESPONSE #100
+    SetGlobal("cdt_spawn_tiax","GLOBAL",1)
+    CreateCreature("TIAX4",[%x_coord%.%y_coord%],%orient%) // Tiax
+END
+
+IF
+  Global("cdt_spawn_tiax","GLOBAL",0)
+  LevelGT(Player1,5)
+THEN
+  RESPONSE #100
+    SetGlobal("cdt_spawn_tiax","GLOBAL",1)
+    CreateCreature("TIAX6",[%x_coord%.%y_coord%],%orient%) // Tiax
+END

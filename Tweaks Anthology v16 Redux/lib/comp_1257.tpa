@@ -1,0 +1,15 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Move NPCs From Baldur's Gate                     \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1251.tpa~ // alora
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1252.tpa~ // eldoth
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1253.tpa~ // quayle
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1254.tpa~ // shar-teel
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1255.tpa~ // tiax
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1256.tpa~ // viconia
+INCLUDE ~Tweaks Anthology v16 Redux/lib/comp_1258.tpa~ // ajantis

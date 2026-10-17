@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Spellcraft / Counterspell class feat for spellcasters           \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_spellcraft_counterspell.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_spellcraft_counterspell.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_spellcraft_counterspell.tra" BEGIN
+    LAF "SPELLCRAFT_COUNTERSPELL" END
+  END
+END

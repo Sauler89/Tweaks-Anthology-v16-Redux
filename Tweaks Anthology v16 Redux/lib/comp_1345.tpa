@@ -1,0 +1,14 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// individual Stronghold allowances                 \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// norh (paladin)                                   \\\\\
+/////                                                  \\\\\
+
+COMPILE ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~     // removes stronghold var
+        ~Tweaks Anthology v16 Redux/dlg/stronghold_norh.d~ // removes class check

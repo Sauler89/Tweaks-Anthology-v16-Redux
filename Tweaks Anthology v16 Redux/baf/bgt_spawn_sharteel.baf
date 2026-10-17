@@ -1,0 +1,29 @@
+IF
+	Global("cdt_spawn_sharteel","GLOBAL",0)
+	LevelLT(Player1,4)
+THEN
+	RESPONSE #100
+		SetGlobal("cdt_spawn_sharteel","GLOBAL",1)
+		CreateCreature("SHARTE",[%x_coord%.%y_coord%],%orient%)  // Shar-Teel
+END
+
+IF
+	Global("cdt_spawn_sharteel","GLOBAL",0)
+	OR(2)
+		Level(Player1,4)
+		Level(Player1,5)
+THEN
+	RESPONSE #100
+		SetGlobal("cdt_spawn_sharteel","GLOBAL",1)
+		CreateCreature("SHARTE4",[%x_coord%.%y_coord%],%orient%)  // Shar-Teel
+END
+
+IF
+	Global("cdt_spawn_sharteel","GLOBAL",0)
+	LevelGT(Player1,5)
+THEN
+	RESPONSE #100
+		SetGlobal("cdt_spawn_sharteel","GLOBAL",1)
+		CreateCreature("SHARTE6",[%x_coord%.%y_coord%],%orient%)  // Shar-Teel
+END
+

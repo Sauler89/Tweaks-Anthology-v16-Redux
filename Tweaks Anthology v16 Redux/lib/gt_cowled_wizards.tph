@@ -1,0 +1,24 @@
+DEFINE_ACTION_FUNCTION "COWLED_WIZARDS"
+BEGIN
+	// patch relevant area scripts \\
+	WITH_SCOPE BEGIN
+		COPY_EXISTING
+			"ar0020.bcs" "override" // City Gates
+			"ar0300.bcs" "override" // The Docks
+			"ar0400.bcs" "override" // Slums
+			"ar0500.bcs" "override" // Bridge District
+			"ar0700.bcs" "override" // Waukeen's Promenade
+			"ar0900.bcs" "override" // Temple District
+			"ar1000.bcs" "override" // Government District
+			//
+			DECOMPILE_AND_PATCH BEGIN
+				// first relevant block
+        REPLACE_TEXTUALLY ~SpellCast(\[PC\],0)~ ~Global("gtCowledWizardsTriggered","GLOBAL",1)~
+        REPLACE_TEXTUALLY ~\(CreateCreatureObjectDoor("COWENF2",LastTrigger,0,0,0)\)~ ~SetGlobal("gtCowledWizardsTriggered","GLOBAL",0) \1~
+			END
+		BUT_ONLY_IF_IT_CHANGES
+	END
+	// lua
+	LAF "APPEND_LUA_CHUNK" STR_VAR "description" = "Utility Functions / Listeners" "sourceFileSpec" = "Tweaks Anthology v16 Redux\luke\lib\utility\decode_spell.lua" "destRes" = "m_gtutil" END
+	LAF "APPEND_LUA_CHUNK" STR_VAR "description" = "Misc Tweaks" "sourceFileSpec" = "Tweaks Anthology v16 Redux\luke\lua\tweaks\cowled_wizards.lua" "destRes" = "m_gttwks" END
+END

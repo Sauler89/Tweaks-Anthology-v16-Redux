@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Defensive Roll feat for Thieves                            \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_defensive_roll.tph"
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_defensive_roll.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_defensive_roll.tra" BEGIN
+    LAF "DEFENSIVE_ROLL" END
+  END
+END

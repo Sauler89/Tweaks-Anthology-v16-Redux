@@ -1,0 +1,92 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Better Icons                                     \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COPY ~Tweaks Anthology v16 Redux/bam/cdgchan.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/cdgelchn.bam~ ~override~
+     ~Tweaks Anthology v16 Redux/bam/cdgdwchn.bam~ ~override~
+     ~Tweaks Anthology v16 Redux/bam/cdgleat.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/gchan01.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/gclck01.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/gclck02.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/gleat01.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck09.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck10.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck11.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck12.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck13.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck15.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck16.bam~  ~override~
+     ~Tweaks Anthology v16 Redux/bam/iclck17.bam~  ~override~
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/common_armor_list.tpa~
+
+ACTION_PHP_EACH cd_common_armor_list AS params => item BEGIN
+
+  ACTION_IF (("%params_2%" STRING_COMPARE_CASE "leather" = 0) OR
+             ("%params_2%" STRING_COMPARE_CASE "chain" = 0) OR
+             ("%params_2%" STRING_COMPARE_CASE "chain_elven" = 0) OR
+             ("%params_2%" STRING_COMPARE_CASE "chain_drow" = 0)) BEGIN
+
+    COPY_EXISTING ~%item%.itm~ ~override~
+      READ_SHORT 0x1c type
+      PATCH_IF type = 2 BEGIN // sanity check
+        READ_ASCII 0x44 icon ELSE 0
+        PATCH_IF (("%params_2%" STRING_COMPARE_CASE "leather" = 0) AND // leather using generic leather icons
+                  (("%icon%" STRING_COMPARE_CASE "gleat01" = 0) OR
+                   ("%icon%" STRING_COMPARE_CASE "_gleat01" = 0))) BEGIN
+          WRITE_ASCII 0x44 ~cdgleat~ #8
+        END
+        PATCH_IF (("%icon%" STRING_COMPARE_CASE "gchan01" = 0) OR
+                  ("%icon%" STRING_COMPARE_CASE "_gchan01" = 0)) BEGIN // (elven) chain using generic chain icons
+          PATCH_IF ("%params_2%" STRING_COMPARE_CASE "chain" = 0) BEGIN // chain
+            WRITE_ASCII 0x44 ~cdgchan~ #8
+          END ELSE
+          PATCH_IF ("%params_2%" STRING_COMPARE_CASE "chain_elven" = 0) BEGIN // elven chain
+            WRITE_ASCII 0x44 ~cdgelchn~ #8
+          END ELSE
+          PATCH_IF ("%params_2%" STRING_COMPARE_CASE "chain_drow" = 0) BEGIN // drow elven chain
+            WRITE_ASCII 0x44 ~cdgdwchn~ #8
+          END
+        END
+      END
+      BUT_ONLY
+
+  END // appearance check
+
+END // php_each
+
+// if Tutu, move BG2 icons to Tutu defaults
+ACTION_IF FILE_EXISTS_IN_GAME ~_gleat01.bam~ THEN BEGIN
+
+  COPY_EXISTING ~gleat01.bam~ ~override/_gleat01.bam~
+                ~gchan01.bam~ ~override/_gchan01.bam~
+
+END
+
+// Valygar's armor should use chain graphic on avatars
+ACTION_IF FILE_EXISTS_IN_GAME ~npchan.itm~ BEGIN
+
+  COPY_EXISTING ~npchan.itm~ ~override~
+    WRITE_ASCII 0x22 ~3A~ #2
+    BUT_ONLY
+
+END
+
+ACTION_FOR_EACH item IN quiver02 quiver04 BEGIN
+
+  ACTION_IF ((FILE_EXISTS_IN_GAME ~%item%.itm~) AND (FILE_EXISTS_IN_GAME ~iquiver0.bam~)) THEN BEGIN
+
+    COPY_EXISTING ~%item%.itm~ ~override~
+      WRITE_ASCII 0x3a ~iquiver0~ #8
+      BUT_ONLY
+
+  END
+
+END
+
+LAM cdtweaks_helper_email

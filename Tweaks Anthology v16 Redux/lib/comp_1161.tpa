@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Multiple Strongholds                             \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// keep class restrictions                          \\\\\
+/////                                                  \\\\\
+
+COMPILE EVALUATE_BUFFER ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~                 // removes stronghold var
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_cabin_choice.d~     // allows choice for ranger stronghold
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_grove_choice.d~     // allows choice for druid stronghold
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_playhouse_choice.d~ // allows choice for bard stronghold
+                        ~Tweaks Anthology v16 Redux/dlg/stronghold_sphere_choice.d~    // allows choice for mage stronghold

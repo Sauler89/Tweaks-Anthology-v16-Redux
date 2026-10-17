@@ -1,0 +1,126 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Make Montaron an Assassin                        \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COPY_EXISTING ~%tutu_var%montar.cre~ ~override~
+  READ_ASCII 0x08 name (8)       // name fields
+  READ_ASCII 0x34 port (16)      // portraits
+  READ_ASCII 0xa4 soundset (396) // read soundset from existing cre file
+  READ_ASCII 0x248 scripts (40)  // five script slots
+  READ_ASCII 0x280 dv (32)       // Death Variable
+  READ_ASCII 0x2cc dlg (8)       // Dialogue file
+  // detect if walking speed altered
+  READ_BYTE  0x033 fx_type
+  READ_LONG  0x2c4 fx_off
+  READ_LONG  0x2c8 fx_num
+  FOR (index = 0 ; index < fx_num ; ++index) BEGIN
+    READ_SHORT (fx_off + (0x08 * fx_type) + (index * ((fx_type * 0xd8) + 0x30))) op
+    PATCH_IF ((op = 176) OR (op = 126)) BEGIN
+      SET index = fx_num // kill loop
+      SET fx_type = 4
+    END
+  END
+  BUT_ONLY
+
+COPY ~Tweaks Anthology v16 Redux/cre/_montar.cre~  ~override/%tutu_var%montar.cre~
+     ~Tweaks Anthology v16 Redux/cre/_montar2.cre~ ~override/%tutu_var%montar2.cre~
+     ~Tweaks Anthology v16 Redux/cre/_montar4.cre~ ~override/%tutu_var%montar4.cre~
+     ~Tweaks Anthology v16 Redux/cre/_montar6.cre~ ~override/%tutu_var%montar6.cre~
+  WRITE_ASCIIE 0x08 "%name%" #8
+  WRITE_ASCIIE 0x34 "%port%" #16
+  WRITE_ASCIIE 0xa4 "%soundset%" #396
+  WRITE_ASCIIE 0x248 "%scripts%" #40 // scripts
+  WRITE_ASCIIE 0x280 "%dv%" #32           // Death Variable
+  WRITE_ASCIIE 0x2cc "%dlg%" #8    // Dialogue file
+  READ_BYTE 0x234 level
+  ADD_CRE_ITEM ~%tutu_var%leat04~  #0 #0 #0 ~IDENTIFIED~ ~armor~
+  ADD_CRE_ITEM ~%tutu_var%sw1h07~  #0 #0 #0 ~IDENTIFIED~ ~weapon1~ EQUIP
+  ADD_CRE_ITEM ~%tutu_var%potn08~  #1 #0 #0 ~IDENTIFIED~ ~qitem~
+  ADD_CRE_ITEM ~%tutu_var%potn14~  #1 #0 #0 ~IDENTIFIED~ ~qitem~
+  PATCH_IF level > 2 BEGIN 
+    ADD_CRE_ITEM ~%tutu_var%dagg05~ #25 #0 #0 ~IDENTIFIED~ ~inv~
+  END
+  PATCH_IF fx_type = 4 BEGIN
+    LPF ADD_CRE_EFFECT INT_VAR opcode = 176 target = 1 parameter1 = 0xfffffffd timing = 9 END
+  END
+
+// if bg-style or iwd-style proficiencies are installed, adjust proficiencies to match new system
+ACTION_IF (((MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2161~) OR (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2162~)) OR // bg-style profs
+           ((MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2163~) OR (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2164~))) THEN BEGIN // iwd-style profs
+
+  ACTION_IF ((MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2161~) OR (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2162~)) THEN BEGIN // bg-style profs
+
+    ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_montaron_profs BEGIN
+      91 => 103 // 1* short sword > 1* large sword
+      96 => 102 // 1* dagger > 1* small sword
+    END
+    
+    ACTION_IF MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2162~ THEN BEGIN // no wep style
+
+      ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_montaron_profs BEGIN
+        113 => 105 // 1* single weapon > 1* blunt
+      END
+      
+    END   
+
+  END ELSE BEGIN // iwd-style profs
+
+    ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_montaron_profs BEGIN
+      91 => 105 // short sword
+      96 => 115 // dagger
+    END
+    
+    ACTION_IF MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~2164~ THEN BEGIN // no wep style
+
+      ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_montaron_profs BEGIN
+        113 => 102 // 1* single weapon > 1* large sword
+      END
+      
+    END   
+
+  END
+
+  COPY_EXISTING ~%tutu_var%montar.cre~  ~override~
+                ~%tutu_var%montar2.cre~ ~override~
+                ~%tutu_var%montar4.cre~ ~override~
+                ~%tutu_var%montar6.cre~ ~override~
+    PATCH_PHP_EACH cd_montaron_profs AS old => new BEGIN
+      LPF ALTER_EFFECT INT_VAR match_opcode = 233 match_parameter2 = old parameter2 = new silent = 1 END
+    END
+    BUT_ONLY IF_EXISTS
+
+END
+
+// if tob-style npcs are installed, then adjust higher level creatures
+ACTION_IF (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~4020~) THEN BEGIN
+
+  // load patch macro
+  INCLUDE ~Tweaks Anthology v16 Redux/lib/tob_style_npcs.tpa~
+
+  ACTION_CLEAR_ARRAY cd_tob_style_npcs
+  ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_tob_style_npcs BEGIN
+    _montar2 => _montar
+    _montar4 => _montar
+    _montar6 => _montar
+    montar2  => montar
+    montar4  => montar
+    montar6  => montar
+  END
+
+  ACTION_PHP_EACH cd_tob_style_npcs AS dest => orig BEGIN
+
+    ACTION_IF ((FILE_EXISTS_IN_GAME ~%orig%.cre~) AND (FILE_EXISTS_IN_GAME ~%dest%.cre~)) THEN BEGIN
+
+      COPY_EXISTING ~%orig%.cre~ ~override/%dest%.cre~
+        LAUNCH_PATCH_MACRO ~tob_style_npcs~
+        BUT_ONLY
+
+    END
+
+  END
+
+END

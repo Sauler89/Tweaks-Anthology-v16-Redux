@@ -1,0 +1,14 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// individual Stronghold allowances                 \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// de'arnise keep (fighter, monk)                   \\\\\
+/////                                                  \\\\\
+
+COMPILE ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~         // removes stronghold var
+        ~Tweaks Anthology v16 Redux/dlg/stronghold_dearnise.d~ // removes class check

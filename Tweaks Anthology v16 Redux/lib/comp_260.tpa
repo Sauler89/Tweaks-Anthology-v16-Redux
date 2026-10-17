@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Hide VFX from invisible enemies                            \\\\\
+/////                                                            \\\\\
+////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\weidu\append_lua_chunk.tph"
+
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_hide_vfx.tph"
+
+  LAF "HIDE_VFX" END
+
+END

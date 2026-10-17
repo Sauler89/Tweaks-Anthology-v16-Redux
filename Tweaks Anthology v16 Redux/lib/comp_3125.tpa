@@ -1,0 +1,19 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Happy neutrals                                   \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+// "Always neutral" is the stronger explicit choice. Do not turn neutral
+// characters happy again when both options are selected.
+ACTION_IF (MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ 3122) BEGIN
+  PRINT ~Tweaks Anthology v16 Redux: Happy Patch #3122 takes precedence; all reputation comments remain neutral.~
+END ELSE BEGIN
+  COPY_EXISTING ~happy.2da~ ~override~
+    FOR (row = 6; row < 12; row = row + 1) BEGIN
+      SET_2DA_ENTRY "%row%" 2 4 ~80~
+    END
+  BUT_ONLY
+END

@@ -1,0 +1,19 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////                                                            \\\\\////\\\\////
+///// Animal Companion for Beastmasters                                      \\\\\
+/////                                                            \\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  INCLUDE "Tweaks Anthology v16 Redux\argent\find_free_anim_slot.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_animal_companion\main.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_animal_companion.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_animal_companion.tra" BEGIN
+    LAF "ANIMAL_COMPANION" END
+  END
+END

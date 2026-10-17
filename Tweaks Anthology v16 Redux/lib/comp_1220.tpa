@@ -1,0 +1,47 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Cromwell can upgrade WK items                    \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+STRING_SET 66764 @122043
+
+ACTION_IF NOT MOD_IS_INSTALLED ~Tweaks Anthology v16 Redux/setup-Tweaks Anthology v16 Redux.tp2~ ~1230~ BEGIN
+
+  EXTEND_BOTTOM ~botsmith.bcs~ ~Tweaks Anthology v16 Redux/baf/botsmith.baf~
+
+  COPY_EXISTING ~botsmith.dlg~ ~override~
+    DECOMPILE_AND_PATCH BEGIN
+      REPLACE_TEXTUALLY ~OR(2)\([%TAB% %LNL%%MNL%%WNL%]*PartyHasItem("blun14")[%TAB% %LNL%%MNL%%WNL%]*PartyHasItem("blun30c")\)~
+                        ~OR(3)\1 PartyHasItem("blun30d")~
+    END
+    BUT_ONLY
+
+  COMPILE ~Tweaks Anthology v16 Redux/dlg/cespy0.d~ // cespenar FoA head order
+
+END
+
+// compiled in serial so that COPY_TRANS will get the one before it
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom1.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom2.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom3.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom4.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom5.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom6.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom7.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom8.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom9.d~
+ACTION_IF MOD_IS_INSTALLED ~item_rev/item_rev.tp2~ ~0~ THEN BEGIN // ir detection
+  COMPILE ~Tweaks Anthology v16 Redux/dlg/crom10_irr.d~ // ir adds ring of energy to erienne sling upgrade
+END ELSE BEGIN
+  COMPILE ~Tweaks Anthology v16 Redux/dlg/crom10.d~ // regular
+END
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom11.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom12.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom13.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom14.d~
+COMPILE ~Tweaks Anthology v16 Redux/dlg/crom15.d~
+
+EXTEND_BOTTOM ~ar0334.bcs~ ~Tweaks Anthology v16 Redux/baf/ar0334.baf~

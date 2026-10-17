@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Divine Grace / Dark Blessing feat for Paladins / Blackguards    \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_divine_grace_dark_blessing.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_divine_grace_dark_blessing.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_divine_grace_dark_blessing.tra" BEGIN
+    LAF "DIVINE_GRACE_DARK_BLESSING" END
+  END
+END

@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// NWN-style Armor vs. Dexterity                              \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_nwn-style_armor_vs_dex.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_nwn-style_armor_vs_dex.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_nwn-style_armor_vs_dex.tra" BEGIN
+    LAF "NWN-STYLE_ARMOR_VS_DEX" END
+  END
+END

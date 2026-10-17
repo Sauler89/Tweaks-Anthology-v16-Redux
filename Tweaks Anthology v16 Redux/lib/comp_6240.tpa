@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Trackless Step class feat for Rangers                           \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_trackless_step.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_trackless_step.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_trackless_step.tra" BEGIN
+    LAF "TRACKLESS_STEP" END
+  END
+END

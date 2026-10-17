@@ -1,0 +1,15 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// individual Stronghold allowances                 \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// planar sphere (mage)                             \\\\\
+/////                                                  \\\\\
+
+COMPILE ~Tweaks Anthology v16 Redux/dlg/stronghold1.d~              // removes stronghold var
+        ~Tweaks Anthology v16 Redux/dlg/stronghold_sphere.d~        // removes class check
+        ~Tweaks Anthology v16 Redux/dlg/stronghold_sphere_choice.d~ // allows choice for mage stronghold

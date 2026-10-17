@@ -1,0 +1,88 @@
+MKDIR ~weidu_external/Tweaks Anthology v16 Redux/random~
+COPY ~Tweaks Anthology v16 Redux/2da/random.2da~ ~weidu_external/Tweaks Anthology v16 Redux/random/random.2da~
+OUTER_SPRINT table rndtres
+
+// in case it's an older version of iwdfp, correct these
+COPY_EXISTING ~ar9200.are~ ~override~
+  LPF REPLACE_AREA_ITEM INT_VAR charges1 = 3 charges2 = 0 charges3 = 0 STR_VAR old_item = extres1 new_item = extres4 END
+  BUT_ONLY IF_EXISTS
+
+COPY_EXISTING ~ar9601.are~ ~override~
+  LPF REPLACE_AREA_ITEM INT_VAR charges1 = 1 charges2 = 1 charges3 = 0 STR_VAR old_item = extres4 new_item = extres1 END
+  BUT_ONLY IF_EXISTS
+
+ACTION_IF MOD_IS_INSTALLED ~ub_iwd/setup-ub_iwd.tp2~ ~1500~ THEN BEGIN // if restored random drops from UB
+
+  APPEND_OUTER ~weidu_external/Tweaks Anthology v16 Redux/random/random.2da~
+~ar3201   TG4Tres  Sarcophagus1             0
+ar4005   DE5Tres  Yuan-tiChampion1         1
+ar8002   UD6Tres  Kelly                    1
+ar3001   TG5Tres  Lysan                    0
+ar9100   EXTRES3  Alpheus                  1~
+
+END
+
+ACTION_IF game_is_iwdee THEN BEGIN // iwdee uses slightly different placement for TG4/5Tres from ub's restored random drops
+
+  APPEND_OUTER ~weidu_external/Tweaks Anthology v16 Redux/random/random.2da~
+~ar3602   TG4Tres  AR3602Chest3             0
+ar4005   DE5Tres  Yuan-tiChampion1         1
+ar8002   UD6Tres  Kelly                    1
+AR4001   TG5Tres  Chest2                   0~
+
+  ACTION_IF !MOD_IS_INSTALLED ~subtled_item_tweaks/subtled_item_tweaks.tp2~ ~140~ THEN BEGIN // replaces rndtre77 with 2x quost as drops, so don't bother processing
+
+    APPEND_OUTER ~weidu_external/Tweaks Anthology v16 Redux/random/random.2da~ ~ar9100   EXTRES3  Alpheus                  1~
+
+  END
+
+END
+
+ACTION_IF tfg_bows THEN BEGIN // add extra chest in TotFG if we're not in the wandering merchant option
+
+  APPEND_OUTER ~weidu_external/Tweaks Anthology v16 Redux/random/random.2da~ ~ar3601   TFGTres  Container11              0~
+
+END
+
+// first, a couple of areas have random drops in non-uniquely named containers
+ACTION_IF NOT (game_is_iwdee OR game_is_iwd-in-bg2) THEN BEGIN
+
+  OUTER_SPRINT KT1Tres_ref "KT1Tres"
+  OUTER_SPRINT KT2Tres_ref "KT2Tres"
+  OUTER_SPRINT KT3Tres_ref "KT3Tres"
+
+END ELSE BEGIN
+
+  OUTER_SPRINT KT1Tres_ref "RNDTRE18"
+  OUTER_SPRINT KT2Tres_ref "RNDTRE19"
+  OUTER_SPRINT KT3Tres_ref "RNDTRE20"
+
+END
+
+// first, a couple of areas have random drops in non-uniquely named containers
+ACTION_DEFINE_ASSOCIATIVE_ARRAY cd_cont_names BEGIN
+  ar3501 => "%KT1Tres_ref%"
+  ar3502 => "%KT2Tres_ref%"
+  ar3503 => "%KT3Tres_ref%"
+END
+
+ACTION_PHP_EACH cd_cont_names AS area => random BEGIN
+
+  COPY_EXISTING ~%area%.are~ ~override~
+    READ_LONG  0x70 cont_off
+    READ_SHORT 0x74 cont_num
+    READ_LONG  0x78 item_off
+    FOR (index = 0 ; index < cont_num ; ++index) BEGIN
+      READ_LONG (cont_off + 0x40 + (index * 0xc0)) item_idx
+      READ_LONG (cont_off + 0x44 + (index * 0xc0)) item_num
+      FOR (index2 = 0 ; index2 < item_num ; ++index2) BEGIN
+        READ_ASCII (item_off +        ((index2 + item_idx) * 0x14)) item
+        PATCH_IF ("%item%" STRING_COMPARE_CASE "%random%" = 0) BEGIN // if container has drop in question
+          WRITE_ASCIIE (cont_off +        (index * 0xc0)) ~CD%random%~ #32 // rename container
+          SET index2 = item_num
+          SET index = cont_num // kill both loops
+        END
+      END
+    END
+
+END

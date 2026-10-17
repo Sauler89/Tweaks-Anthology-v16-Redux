@@ -1,0 +1,18 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////                                                            \\\\\////\\\\////
+///// Overwhelming/Devastating Critical class feat for Trueclass Fighters    \\\\\
+/////                                                            \\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\////\\\\////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //INCLUDE "Tweaks Anthology v16 Redux\ardanis\functions.tph" // now loaded in ALWAYS block
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_overwhelming_devastating_critical.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_overwhelming_devastating_critical.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_overwhelming_devastating_critical.tra" BEGIN
+    LAF "OVERWHELMING_DEVASTATING_CRITICAL" END
+  END
+END

@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                 /////
+///// Poison Save class feat for Assassins                            \\\\\
+/////                                                                 \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_poison_save.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_poison_save.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_poison_save.tra" BEGIN
+    LAF "POISON_SAVE" END
+  END
+END

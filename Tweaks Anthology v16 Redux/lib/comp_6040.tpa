@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Weapon Finesse for Thieves                                 \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_weapon_finesse.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_weapon_finesse.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_weapon_finesse.tra" BEGIN
+    LAF "WEAPON_FINESSE" END
+  END
+END

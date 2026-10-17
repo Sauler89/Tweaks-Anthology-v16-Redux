@@ -1,0 +1,14 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Restore original Logo for HoW Games                        \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COPY ~Tweaks Anthology v16 Redux/mos/gprogbar.mos~ ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrbpbar.mos~ ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrbpbg.mos~  ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrbpcap.mos~ ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrbpsk2.mos~ ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrbpsk.mos~  ~override~

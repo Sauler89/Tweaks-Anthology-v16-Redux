@@ -1,0 +1,25 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Change Nalia's Avatar to Thief                   \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/joinable_npc_array.tpa~
+
+ACTION_PHP_EACH JOINABLE_NPC_ARRAY AS file => dv BEGIN
+
+  ACTION_IF ("%dv%" STRING_COMPARE_CASE "nalia"  = 0) BEGIN
+
+    COPY_EXISTING ~%file%~ ~override~
+      READ_LONG   0x28 anim  ELSE 0
+      READ_BYTE  0x273 class ELSE 0
+      PATCH_IF ((class = 13) AND (anim = 0x6210)) BEGIN
+        WRITE_LONG 0x28 0x6310
+      END
+      BUT_ONLY
+      
+  END
+
+END

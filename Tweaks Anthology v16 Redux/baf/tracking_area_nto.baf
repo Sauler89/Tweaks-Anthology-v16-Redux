@@ -1,0 +1,14 @@
+IF
+  Global("cd_auto_track","%area%",0)
+  NextTriggerObject(Player%index%)
+  HaveSpell(4922)
+  NextTriggerObject(Player%index%)
+  ActionListEmpty()
+  CombatCounter(0)
+  NextTriggerObject(Player%index%)
+  !Range(NearestEnemyOf(Myself),30)
+THEN
+  RESPONSE #100
+    SetGlobal("cd_auto_track","%area%",1)
+    ActionOverride(Player%index%,Spell(Myself,4922))
+END

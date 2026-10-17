@@ -1,0 +1,23 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Change grandmastery bonuses                      \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+/////                                                  \\\\\
+///// bg2 grandmastery                                 \\\\\
+/////                                                  \\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/grandmastery.tpa~
+LAF cdtweaks_grandmastery 
+  INT_VAR     
+    tohit_3pip  =    2 // 2 for oBG2, 3 everywhere else
+    tohit_4pip  =    2 // 2 for oBG2, 3 everywhere else
+    tohit_5pip  =    2 // 2 for oBG2, 3 everywhere else
+    damage_3pip =    2 // 2 for oBG2, 3 everywhere else
+    damage_4pip =    3 // 5 for oBG, oIWD; 3 for oBG2; 4 for oIWD-HoW, EEs
+    damage_5pip =    4 // 4 for oBG2, 5 everywhere else
+    apr_5pip    = "-1" // +0.5 APR for oBG2; +1 APR for EEs; +1.5APR oBG and oIWD
+END

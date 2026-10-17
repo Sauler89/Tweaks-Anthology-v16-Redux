@@ -1,0 +1,23 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Make Edwin a Generalist Mage                     \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+ACTION_INCLUDE "%MOD_FOLDER%/lib/make_generalist.tpa"
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/joinable_npc_array.tpa~
+
+ACTION_PHP_EACH JOINABLE_NPC_ARRAY AS file => dv BEGIN
+
+  ACTION_IF ("%dv%" STRING_COMPARE_CASE "edwin"  = 0) BEGIN
+
+    COPY_EXISTING ~%file%~ ~override~
+      LAUNCH_PATCH_MACRO mh_make_generalist
+      BUT_ONLY IF_EXISTS
+      
+  END
+
+END  

@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////                                                                                     /////
+///// NWN-ish Sneak Attack / Crippling Strike class feat for Thieves and Stalkers         \\\\\
+/////                                                                                     \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_sneakatt_rogue.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_sneakatt_rogue.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_sneakatt_rogue.tra" BEGIN
+    LAF "SNEAKATT_ROGUE" END
+  END
+END

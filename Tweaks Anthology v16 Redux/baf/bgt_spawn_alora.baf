@@ -1,0 +1,17 @@
+IF
+	Global("cdt_spawn_alora","GLOBAL",0)
+	LevelLT(Player1,6)
+THEN
+	RESPONSE #100
+		SetGlobal("cdt_spawn_alora","GLOBAL",1)
+		CreateCreature("ALORA",[%x_coord%.%y_coord%],%orient%) // Alora
+END
+
+IF
+	Global("cdt_spawn_alora","GLOBAL",0)
+	LevelGT(Player1,5)
+THEN
+	RESPONSE #100
+		SetGlobal("cdt_spawn_alora","GLOBAL",1)
+		CreateCreature("ALORA6",[%x_coord%.%y_coord%],%orient%) // Alora
+END

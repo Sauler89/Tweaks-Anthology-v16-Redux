@@ -1,0 +1,48 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Change Imoen's Avatar to Mage                    \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/joinable_npc_array.tpa~
+
+ACTION_PHP_EACH JOINABLE_NPC_ARRAY AS file => dv BEGIN
+
+  ACTION_IF (("%dv%" STRING_COMPARE_CASE "imoen"  = 0) OR
+             ("%dv%" STRING_COMPARE_CASE "imoen2" = 0)) BEGIN
+
+    COPY_EXISTING ~%file%~ ~override~
+      READ_LONG  0x28 anim  ELSE 0
+      READ_BYTE  0x273 class ELSE 0
+      PATCH_IF ((class = 13) AND (anim = 0x6310)) BEGIN
+        WRITE_LONG 0x28 0x6210
+      END
+      BUT_ONLY
+
+  END
+
+END
+
+// Patch all cutscene and dream Imoen avatars as well
+ACTION_FOR_EACH cre IN 
+  ~csimoen.cre~ 
+  ~cuimoen.cre~ 
+  ~cuimoen2.cre~ 
+  ~cuimoen3.cre~ 
+  ~dpimo01.cre~ 
+  ~dream1.cre~ 
+  ~drim01.cre~ 
+  ~drim02.cre~ 
+  ~imoendrm.cre~ 
+  ~ohb1imoe.cre~ 
+  ~ppdrimo.cre~ 
+  ~ppdrimov.cre~ 
+  ~ppimoen.cre~ 
+  ~ttimoen.cre~
+BEGIN
+  COPY_EXISTING ~%cre%~ ~override~
+    WRITE_LONG 0x28 0x6210
+    BUT_ONLY IF_EXISTS
+END

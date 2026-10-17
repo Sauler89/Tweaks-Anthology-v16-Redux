@@ -1,0 +1,16 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Good Aim feat for Halflings                                \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_good_aim.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_good_aim.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_good_aim.tra" BEGIN
+    LAF "GOOD_AIM" END
+  END
+END

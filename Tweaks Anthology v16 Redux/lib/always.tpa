@@ -1,0 +1,58 @@
+MKDIR ~weidu_external/Tweaks Anthology v16 Redux~
+
+INCLUDE ~Tweaks Anthology v16 Redux/ardanis/functions.tph~ // functions
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/game_checks.tpa~ // sets game_is_foo vars, others
+
+ACTION_IF enhanced_edition BEGIN // ee games
+
+  OUTER_SPRINT ~tra_location~ ~Tweaks Anthology v16 Redux/languages~
+
+  LOAD_TRA ~Tweaks Anthology v16 Redux/languages/%LANGUAGE%/ee.tra~
+
+END ELSE BEGIN
+
+  OUTER_SPRINT ~tra_location~ ~weidu_external/Tweaks Anthology v16 Redux/languages~
+
+  // convert strings from UTF-8 for originals
+  ACTION_DEFINE_ARRAY cdnoconvert BEGIN weidu ee END
+  ACTION_DEFINE_ARRAY cdreload BEGIN game END
+  LAF HANDLE_CHARSETS INT_VAR from_utf8 = 1 infer_charsets = 1
+                      STR_VAR default_language = ~english~ tra_path = ~Tweaks Anthology v16 Redux/languages~ out_path = ~weidu_external/Tweaks Anthology v16 Redux/languages~ noconvert_array = cdnoconvert reload_array = cdreload END
+
+  ACTION_IF game_is_soa OR game_is_tob OR game_is_bgt OR game_is_ca OR game_is_tutu OR game_is_tutu_totsc OR game_is_iwd-in-bg2 THEN BEGIN
+
+    ACTION_FOR_EACH file IN iplot01k.itm iplot04g.itm iplot04h.itm iplot04i.itm xr2400.are xr2600.are BEGIN
+      DISABLE_FROM_KEY "%file%"
+    END
+
+    INCLUDE ~Tweaks Anthology v16 Redux/lib/tob2soa.tph~ // add tob scripting to soa games; written such that it shouldn't change anything if used on tob
+
+  END
+
+  ACTION_IF original_iwd AND MOD_IS_INSTALLED ~ab/ab.tp2~ ~0~ BEGIN
+
+    INCLUDE ~Tweaks Anthology v16 Redux/lib/ab_fixes.tpa~ // trying to fix the more egregious broken files of AB
+
+  END
+
+END
+
+INCLUDE ~Tweaks Anthology v16 Redux/lib/g3_cpmvars_master.tpa~ // sets bg/bgee/bgt/eet/tutu vars, cd_extend_bg_area_script macro
+
+ACTION_IF MOD_IS_INSTALLED ~tobex/tobex.tp2~ ~0~ THEN BEGIN OUTER_SET is_tobex = 1 END ELSE BEGIN OUTER_SET is_tobex = 0 END // TobEx
+
+ACTION_IF game_is_eet BEGIN
+  OUTER_SET bg2_chapter = 12
+END ELSE BEGIN
+  OUTER_SET bg2_chapter = 0
+END
+OUTER_FOR (i=1; i<=10; i=i+1) BEGIN
+  OUTER_SET bg2_chapter = bg2_chapter + 1
+  OUTER_SPRINT name_source ~bg2_chapter_%i%~
+  OUTER_SET EVAL ~%name_source%~ = bg2_chapter
+END
+
+ACTION_IF (FILE_EXISTS ~Tweaks Anthology v16 Redux/Tweaks Anthology v16 Redux.txt~) THEN BEGIN
+  INCLUDE ~Tweaks Anthology v16 Redux/Tweaks Anthology v16 Redux.txt~ // config file
+END

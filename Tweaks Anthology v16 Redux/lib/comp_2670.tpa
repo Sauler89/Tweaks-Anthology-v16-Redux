@@ -1,0 +1,17 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Limit resting mechanic                                     \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+WITH_SCOPE BEGIN
+  INCLUDE "Tweaks Anthology v16 Redux\luke\lib\install.tph"
+  //
+  INCLUDE "Tweaks Anthology v16 Redux\lib\gt_limit_resting_mechanic.tph"
+  //
+  WITH_TRA "Tweaks Anthology v16 Redux\languages\english\gt_limit_resting_mechanic.tra" "Tweaks Anthology v16 Redux\languages\%LANGUAGE%\gt_limit_resting_mechanic.tra" BEGIN
+    LAF "LIMIT_RESTING_MECHANIC" END
+  END
+END

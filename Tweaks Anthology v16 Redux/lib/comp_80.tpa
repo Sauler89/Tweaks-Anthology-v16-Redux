@@ -1,0 +1,13 @@
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                            \\\\\
+///// Restore SoA Logo for ToB Games                             \\\\\
+/////                                                            \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+COPY ~Tweaks Anthology v16 Redux/bam/loadcntr.bam~     ~override~
+     ~Tweaks Anthology v16 Redux/mos/gprogbar_soa.mos~ ~override/gprogbar.mos~
+     ~Tweaks Anthology v16 Redux/mos/gtrspsk.mos~      ~override~
+     ~Tweaks Anthology v16 Redux/mos/gtrspsk2.mos~     ~override~
+     ~Tweaks Anthology v16 Redux/mos/stoneopt.mos~     ~override~
